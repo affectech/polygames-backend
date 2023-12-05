@@ -4,11 +4,12 @@ import (
 	"context"
 	"errors"
 	"fmt"
-	"github.com/go-chi/chi/v5"
 	"net/http"
 	"polygames/internal/core"
 	"polygames/internal/infrastructure/config"
 	"polygames/internal/infrastructure/logger"
+
+	"github.com/go-chi/chi/v5"
 )
 
 type Server interface {

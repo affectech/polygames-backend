@@ -1,0 +1,63 @@
+services:
+  postgresql:
+    image: postgres
+    container_name: polygames-postgresql
+    ports:
+      - 5432:5432
+    volumes:
+      - ./db/.pg_data:/var/lib/postgresql/data
+      - ./db/init-db.sh:/init-db.sh
+      - ./db/fake.sql:/fake.sql
+
+    environment:
+      POSTGRES_DB: ${DB_DATABASE}
+      POSTGRES_USER: ${DB_USERNAME}
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+    restart: "${DOCKER_RESTART_POLICY:-unless-stopped}"
+    networks:
+      - net
+    healthcheck:
+      test:
+        ["CMD-SHELL", "sh -c 'pg_isready -U ${DB_USERNAME} -d ${DB_DATABASE}'"]
+      interval: 10s
+      timeout: 0s
+      retries: 2
+
+
+  server:
+    container_name: polygames-server
+    build:
+      dockerfile: Dockerfile
+      args:
+        - APP_DIR=$APP_DIR
+        - APP_NAME=$APP_NAME
+    restart: "${DOCKER_RESTART_POLICY:-unless-stopped}"
+    env_file:
+      - .env
+    ports:
+      - 8087:8080
+    environment:
+      - ENV=${APP_ENV:-prod}
+    networks:
+      - net
+    volumes:
+      - ./:/opt/polygames
+    depends_on:
+      postgresql:
+        condition: service_healthy
+       
+  migrations:
+    image: migrate/migrate
+    container_name: polygames-migrations
+    depends_on:
+      postgresql:
+        condition: service_healthy
+    command: -database postgres://${DB_USERNAME}:${DB_PASSWORD}@postgresql:${DB_PORT}/${DB_DATABASE}?sslmode=disable -path /migrations up
+    volumes:
+      - ./migrations:/migrations
+    networks:
+      - net
+      
+networks:
+  net:
+

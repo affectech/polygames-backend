@@ -3,8 +3,8 @@ package core
 import (
 	"context"
 	"fmt"
-	"os"
 	"polygames/internal/domain"
+	"polygames/internal/infrastructure/config"
 	"polygames/internal/repository/database"
 	"polygames/internal/repository/database/postgresql"
 )
@@ -35,7 +35,7 @@ type core struct {
 
 // New returns Core instance.
 func New(ctx context.Context) (Core, error) {
-	db, err := postgresql.NewDriver(ctx, os.Getenv("DATABASE_DSN"))
+	db, err := postgresql.NewDriver(ctx, config.Config.DatabaseConnString)
 	if err != nil {
 		return nil, fmt.Errorf("creating postgresql driver: %w", err)
 	}

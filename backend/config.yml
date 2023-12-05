@@ -1,4 +1,4 @@
-database_conn_string: postgres://postgres:963852741@localhost:5432/polygames
+database_conn_string: postgres://postgres:12345678@postgresql:5432/polygames?sslmode=disable
 app:
   jwt:
     access_expiration_minutes: 15
@@ -7,8 +7,8 @@ app:
     refresh_token_secret_key: abc123
 interfaces:
   http:
-    port: 3000
-    host: localhost
+    port: 8080
+    host: 127.0.0.1
 logger:
   log_to_console: true
   encode_logs_as_json: true
