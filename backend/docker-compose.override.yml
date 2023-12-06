@@ -1,0 +1,12 @@
+services:
+  pgweb:
+    image: sosedoff/pgweb
+    restart: always
+    ports:
+      - ${PGWEB_PORT}:8081
+    environment:
+      - PGWEB_DATABASE_URL=postgres://${DB_USERNAME}:${DB_PASSWORD}@postgresql:${DB_PORT}/${DB_DATABASE}?sslmode=disable
+    networks:
+      - net
+    depends_on:
+      - postgresql

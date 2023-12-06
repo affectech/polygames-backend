@@ -1,6 +1,6 @@
 FROM golang:1.21-alpine
 
-EXPOSE 8087
+EXPOSE 8080
 
 # .env -> docker-compose -> Dockerfile forwarding
 ARG APP_DIR

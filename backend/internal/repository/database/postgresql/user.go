@@ -4,9 +4,10 @@ import (
 	"context"
 	"errors"
 	"fmt"
-	"github.com/jackc/pgx/v5"
 	"polygames/internal/domain"
 	"polygames/internal/repository/database"
+
+	"github.com/jackc/pgx/v5"
 )
 
 func (d *driver) GetUser(ctx context.Context, req *domain.GetUserRequest) (*domain.User, error) {
@@ -35,17 +36,13 @@ func (d *driver) GetUser(ctx context.Context, req *domain.GetUserRequest) (*doma
 
 func (d *driver) GetUserByLogin(ctx context.Context, login string) (*domain.User, error) {
 	var user domain.User
-	err := d.conn.QueryRow(ctx, `select id, username, email, password, gender, created_at, updated_at, role
+	err := d.conn.QueryRow(ctx, `select id, username, email, password
                                      from users
                                      where lower(username) = $1 or lower(email) = $1`, login).Scan(
 		&user.ID,
 		&user.Username,
 		&user.Email,
 		&user.Password,
-		&user.Gender,
-		&user.CreatedAt,
-		&user.UpdatedAt,
-		&user.Role,
 	)
 	if err != nil {
 		if errors.Is(err, pgx.ErrNoRows) {
@@ -69,15 +66,14 @@ func (d *driver) DeleteUser(ctx context.Context, req *domain.DeleteUserRequest) 
 
 func (d *driver) SignUp(ctx context.Context, req *domain.SignUpRequest) (int64, error) {
 	var id int64
-	err := d.conn.QueryRow(ctx, `insert into users(username, email, password, role) 
-									 values($1, $2, $3, $4) returning id`,
+	err := d.conn.QueryRow(ctx, `insert into users(username, email, password) 
+									 values($1, $2, $3) returning id`,
 		req.Username,
 		req.Email,
 		req.Password,
-		domain.UserRoleUser,
 	).Scan(&id)
 	if err != nil {
-		return 0, fmt.Errorf("inserting user for sign up: %w", err)
+		return 0, fmt.Errorf("!! Inserting user for sign up: %w", err)
 	}
 
 	return id, nil

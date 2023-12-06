@@ -4,13 +4,15 @@ import (
 	"context"
 	"errors"
 	"fmt"
-	"github.com/dgrijalva/jwt-go"
-	"golang.org/x/crypto/bcrypt"
 	"polygames/internal/domain"
 	"polygames/internal/domain/errcore"
 	"polygames/internal/infrastructure/config"
+	"polygames/internal/infrastructure/logger"
 	"polygames/internal/repository/database"
 	"time"
+
+	"github.com/dgrijalva/jwt-go"
+	"golang.org/x/crypto/bcrypt"
 )
 
 func (c *core) SignIn(ctx context.Context, req *domain.SignInRequest) (*domain.SignInResponse, error) {
@@ -23,6 +25,7 @@ func (c *core) SignIn(ctx context.Context, req *domain.SignInRequest) (*domain.S
 	}
 
 	if !user.CheckPassword(req.Password) {
+		logger.Logger.Info().Msg("passwords do not match")
 		return nil, errcore.InvalidCredentialsError
 	}
 
