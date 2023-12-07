@@ -14,17 +14,17 @@ CREATE TABLE IF NOT EXISTS users
 CREATE TABLE IF NOT EXISTS games
 (
     id            bigserial primary key,
-    user_id       text not null,
-    team_id       text not null,
+    user_id       int not null,
+    team_id       int not null,
     description   text,
     genre_id      int not null,
-    creation_data date,
-    last_update   date,
+    created_at    date,
+    updated_at    date,
     likes         int,
     views         int,
     downloads     int,
     image         text not null,
-    file          text
+    file          text not null
 );
 
 CREATE TABLE IF NOT EXISTS genres
