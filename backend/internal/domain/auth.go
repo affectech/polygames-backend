@@ -1,5 +1,7 @@
 package domain
 
+import "time"
+
 type (
 	AccessTokenMetadata struct {
 		Id       int64    `json:"id"`
@@ -21,9 +23,11 @@ type (
 	}
 
 	SignUpRequest struct {
-		Username string `json:"username"`
-		Email    string `json:"email"`
-		Password string `json:"password"`
+		Username    string    `json:"username"`
+		Email       string    `json:"email"`
+		Password    string    `json:"password"`
+		Gender      string    `json:"gender"`
+		DateOfBirth time.Time `json:"date_of_birth"`
 	}
 	SignUpResponse struct {
 		AccessToken  string `json:"accessToken"`

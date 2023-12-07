@@ -39,13 +39,13 @@ type (
 		Game *Game `json:"data"`
 	}
 	UpdateGameRequest struct {
-		ID          int64  `json:"id"`
-		UserID      int64  `json:"user_id"`
-		TeamID      int64  `json:"team_id"`
-		Description string `json:"description"`
-		GenreID     int64  `json:"genre_id"`
-		ImageID     string `json:"image_id"`
-		FileID      string `json:"file_id"`
+		ID          int64   `json:"id"`
+		UserID      *int64  `json:"user_id"`
+		TeamID      *int64  `json:"team_id"`
+		Description *string `json:"description"`
+		GenreID     *int64  `json:"genre_id"`
+		ImageID     *string `json:"image_id"`
+		FileID      *string `json:"file_id"`
 	}
 	UpdateGameResponse struct {
 		Game *Game `json:"data"`

@@ -1,12 +1,14 @@
 CREATE TABLE IF NOT EXISTS users
 (
     id            bigserial primary key,
-    name          text not null,
-    password      text not null,
+    username      text not null,
     email         text,
-    gender        int not null,
-    date_of_birth text not null,
-    "group"       text not null
+    password      text not null,
+    gender        text,
+    date_of_birth date,
+    created_at    date,
+    updated_at    date,
+    role          int
 );
 
 CREATE TABLE IF NOT EXISTS games
