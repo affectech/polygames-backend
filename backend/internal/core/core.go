@@ -21,6 +21,11 @@ type Core interface {
 	UpdateGenre(ctx context.Context, req *domain.UpdateGenreRequest) (*domain.UpdateGenreResponse, error)
 	DeleteGenre(ctx context.Context, req *domain.DeleteGenreRequest) (*domain.DeleteGenreResponse, error)
 
+	CreatePlatform(ctx context.Context, req *domain.CreatePlatformRequest) (*domain.CreatePlatformResponse, error)
+	GetPlatform(ctx context.Context, req *domain.GetPlatformRequest) (*domain.GetPlatformResponse, error)
+	UpdatePlatform(ctx context.Context, req *domain.UpdatePlatformRequest) (*domain.UpdatePlatformResponse, error)
+	DeletePlatform(ctx context.Context, req *domain.DeletePlatformRequest) (*domain.DeletePlatformResponse, error)
+
 	SignIn(ctx context.Context, req *domain.SignInRequest) (*domain.SignInResponse, error)
 	SignUp(ctx context.Context, req *domain.SignUpRequest) (*domain.SignUpResponse, error)
 

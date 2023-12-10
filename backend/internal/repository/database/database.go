@@ -16,6 +16,11 @@ type Database interface {
 	UpdateGenre(ctx context.Context, req *domain.UpdateGenreRequest) error
 	DeleteGenre(ctx context.Context, req *domain.DeleteGenreRequest) error
 
+	CreatePlatform(ctx context.Context, req *domain.CreatePlatformRequest) (int64, error)
+	GetPlatform(ctx context.Context, req *domain.GetPlatformRequest) (*domain.Platform, error)
+	UpdatePlatform(ctx context.Context, req *domain.UpdatePlatformRequest) error
+	DeletePlatform(ctx context.Context, req *domain.DeletePlatformRequest) error
+
 	GetUser(ctx context.Context, req *domain.GetUserRequest) (*domain.User, error)
 	GetUserByLogin(ctx context.Context, login string) (*domain.User, error)
 	CheckUsernameUniqueness(ctx context.Context, username string) error

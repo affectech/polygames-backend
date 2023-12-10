@@ -64,7 +64,7 @@ func (app *application) Start() error {
 	signal.Notify(quit, signals...)
 
 	<-quit
-	logger.Logger.Info().Msg("Shutting down the server...")
+	logger.Logger.Info().Msg("shutting down the server...")
 
 	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
 	defer cancel()
@@ -73,7 +73,7 @@ func (app *application) Start() error {
 		logger.Logger.Error().Msgf("server shutdown failed: %v", err)
 	}
 
-	logger.Logger.Info().Msg("Server has been shut down")
+	logger.Logger.Info().Msg("server has been shut down")
 
 	return nil
 }

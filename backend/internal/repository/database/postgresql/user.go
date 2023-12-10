@@ -36,7 +36,7 @@ func (d *driver) GetUser(ctx context.Context, req *domain.GetUserRequest) (*doma
 
 func (d *driver) GetUserByLogin(ctx context.Context, login string) (*domain.User, error) {
 	var user domain.User
-	err := d.conn.QueryRow(ctx, `select id, username, email, password, gender, created_at, updated_at, role
+	err := d.conn.QueryRow(ctx, `select id, username, email, password, gender, date_of_birth, created_at, updated_at, role
                                      from users
                                      where lower(username) = $1 or lower(email) = $1`, login).Scan(
 		&user.ID,
@@ -44,6 +44,7 @@ func (d *driver) GetUserByLogin(ctx context.Context, login string) (*domain.User
 		&user.Email,
 		&user.Password,
 		&user.Gender,
+		&user.DateOfBirth,
 		&user.CreatedAt,
 		&user.UpdatedAt,
 		&user.Role,

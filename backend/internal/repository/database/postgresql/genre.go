@@ -10,7 +10,7 @@ import (
 )
 
 func (d *driver) CreateGenre(ctx context.Context, req *domain.CreateGenreRequest) (int64, error) {
-	row := d.conn.QueryRow(ctx, `insert into genres(genre_id)
+	row := d.conn.QueryRow(ctx, `insert into genres(name)
                                      values($1)
                                      returning id`,
 	)

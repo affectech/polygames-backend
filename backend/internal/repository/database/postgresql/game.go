@@ -10,7 +10,7 @@ import (
 )
 
 func (d *driver) CreateGame(ctx context.Context, req *domain.CreateGameRequest) (int64, error) {
-	row := d.conn.QueryRow(ctx, `insert into games(user_id, team_id, description, genre_id, image_id, file_id)
+	row := d.conn.QueryRow(ctx, `insert into games(user_id, team_id, description, genre_id, image, file)
                                      values($1, $2, $3, $4, $5, $6)
                                      returning id`,
 		req.UserID,
@@ -31,7 +31,7 @@ func (d *driver) CreateGame(ctx context.Context, req *domain.CreateGameRequest) 
 
 func (d *driver) GetGame(ctx context.Context, req *domain.GetGameRequest) (*domain.Game, error) {
 	row := d.conn.QueryRow(ctx, `select 
-                                     c.id, c.user_id, c.team_id, c.description, c.genre_id, c.image_id, c.file_id, c.created_at, c.updated_at
+                                     c.id, c.user_id, c.team_id, c.description, c.genre_id, c.image, c.file, c.created_at, c.updated_at
                                      from games c
                                      where c.id = $1`, req.GameID)
 
@@ -59,7 +59,7 @@ func (d *driver) GetGame(ctx context.Context, req *domain.GetGameRequest) (*doma
 func (d *driver) UpdateGame(ctx context.Context, req *domain.UpdateGameRequest) error {
 	var ok bool
 	err := d.conn.QueryRow(ctx, `update games 
-                                     set description = $4, genre_id = $5, image_id = $6, file_id = $7, updated_at = now()
+                                     set description = $4, genre_id = $5, image = $6, file = $7, updated_at = now()
                                      where id = $1
                                      returning true`,
 		req.ID,
