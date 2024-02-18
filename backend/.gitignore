@@ -4,3 +4,4 @@
 .DS_Store
 polygames
 db
+tmp/

@@ -1,12 +1,12 @@
 services:
   postgresql:
-    image: postgres
     container_name: polygames-postgresql
+    image: postgres
     ports:
       - 5432:5432
     volumes:
-      - ./db/.pg_data:/var/lib/postgresql/data
-      - ./db/fake.sql:/docker-entrypoint-initdb.d/fake.sql
+      - ./database/.pg_data:/var/lib/postgres/data
+      - ./database/fake.sql:/docker-entrypoint-initdb.d/fake.sql
 
     environment:
       POSTGRES_DB: ${DB_DATABASE}
@@ -23,6 +23,7 @@ services:
       retries: 2
 
   server:
+    container_name: polygames-server
     build:
       context: .
       dockerfile: Dockerfile
@@ -30,7 +31,6 @@ services:
         - APP_DIR=$APP_DIR
         - APP_NAME=$APP_NAME
     restart: "${DOCKER_RESTART_POLICY:-unless-stopped}"
-    container_name: polygames-server
     env_file:
       - .env
     ports:
@@ -46,14 +46,16 @@ services:
         condition: service_healthy
 
   migrations:
-    image: migrate/migrate
     container_name: polygames-migrations
+    image: migrate/migrate
     depends_on:
       postgresql:
         condition: service_healthy
-    command: -database postgres://${DB_USERNAME}:${DB_PASSWORD}@postgresql:${DB_PORT}/${DB_DATABASE}?sslmode=disable -path /migrations up
+    networks:
+      - net
+    command: -database postgres://${DB_USERNAME}:${DB_PASSWORD}@postgresql:${DB_PORT}/${DB_DATABASE}?sslmode=disable -path /opt/polygames/migrations up
     volumes:
-      - ./migrations:/migrations
+      - ./database/migrations:/opt/polygames/migrations
 
 networks:
   net:
