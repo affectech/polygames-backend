@@ -11,6 +11,20 @@ import (
 	"strings"
 )
 
+// CreateGame godoc
+// @Summary Create a new game
+// @Description Create a new game with provided details
+// @Tags games
+// @Accept json
+// @Produce json
+// @Param user_id query integer true "User ID"
+// @Param team_id query integer true "Team ID"
+// @Param description query string true "Description"
+// @Param genre_id query integer true "Genre ID"
+// @Param image formData file true "Game Image"
+// @Param file formData file true "Game File"
+// @Success 201 {object} domain.Game "Successfully created game"
+// @Router /api/v1/games [post]
 func (s *server) CreateGame(w http.ResponseWriter, r *http.Request) {
 	var req domain.CreateGameRequest
 	//UserID
@@ -127,6 +141,15 @@ func (s *server) CreateGame(w http.ResponseWriter, r *http.Request) {
 	s.sendJSON(http.StatusCreated, game, w)
 }
 
+// GetGame godoc
+// @Summary Get a game by ID
+// @Description Retrieve a game by its ID
+// @Tags games
+// @Accept json
+// @Produce json
+// @Param game_id path integer true "Game ID"
+// @Success 200 {object} domain.Game "Successfully retrieved game"
+// @Router /api/v1/games/{game_id} [get]
 func (s *server) GetGame(w http.ResponseWriter, r *http.Request) {
 	req := domain.GetGameRequest{GameID: s.parseParamInt64("game_id", r)}
 	game, err := s.core.GetGame(r.Context(), &req)
@@ -138,6 +161,16 @@ func (s *server) GetGame(w http.ResponseWriter, r *http.Request) {
 	s.sendJSON(http.StatusOK, game, w)
 }
 
+// UpdateGame godoc
+// @Summary Update a game by ID
+// @Description Update details of a game by its ID
+// @Tags games
+// @Accept json
+// @Produce json
+// @Param game_id path integer true "Game ID"
+// @Param request body domain.UpdateGameRequest true "Update game request body"
+// @Success 200 {object} domain.Game "Successfully updated game"
+// @Router /api/v1/games/{game_id} [put]
 func (s *server) UpdateGame(w http.ResponseWriter, r *http.Request) {
 	var req domain.UpdateGameRequest
 	if err := s.readJSON(&req, r); err != nil {
@@ -156,6 +189,15 @@ func (s *server) UpdateGame(w http.ResponseWriter, r *http.Request) {
 	s.sendJSON(http.StatusOK, game, w)
 }
 
+// DeleteGame godoc
+// @Summary Delete a game by ID
+// @Description Delete a game by its ID
+// @Tags games
+// @Accept json
+// @Produce json
+// @Param game_id path integer true "Game ID"
+// @Success 200 "Successfully deleted game"
+// @Router /api/v1/games/{game_id} [delete]
 func (s *server) DeleteGame(w http.ResponseWriter, r *http.Request) {
 	req := domain.DeleteGameRequest{GameID: s.parseParamInt64("game_id", r)}
 
