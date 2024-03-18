@@ -81,7 +81,7 @@ func (s *server) authMiddleware(next http.Handler) http.Handler {
 
 		sess, err := core.GetSession(cookie.Value)
 		if err != nil {
-			http.Error(w, fmt.Sprintf("user session not found(session id: %s)", cookie.Value), http.StatusUnauthorized)
+			http.Error(w, fmt.Sprintf("user session not found(session id: %s), err: %v", cookie.Value, err), http.StatusUnauthorized)
 			return
 		}
 
@@ -97,6 +97,10 @@ func (s *server) authMiddleware(next http.Handler) http.Handler {
 		user, err := s.core.GetUser(r.Context(), getUserRequest)
 		if err != nil {
 			http.Error(w, "user not found", http.StatusUnauthorized)
+			return
+		}
+		if user.User == nil {
+			http.Error(w, "no data on user", http.StatusUnauthorized)
 			return
 		}
 
