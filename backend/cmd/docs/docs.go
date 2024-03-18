@@ -648,6 +648,9 @@ const docTemplate = `{
                 "accessToken": {
                     "type": "string"
                 },
+                "csrfToken": {
+                    "type": "string"
+                },
                 "refreshToken": {
                     "type": "string"
                 }
