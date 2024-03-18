@@ -1,10 +1,12 @@
 package http
 
 import (
+	"fmt"
 	_ "github.com/swaggo/http-swagger"
 	_ "github.com/swaggo/swag"
 	"net/http"
 	_ "polygames/cmd/docs"
+	"polygames/internal/core"
 	"polygames/internal/domain"
 )
 
@@ -56,4 +58,44 @@ func (s *server) SignUp(w http.ResponseWriter, r *http.Request) {
 	}
 
 	s.sendJSON(http.StatusOK, response, w)
+}
+
+func (s *server) authMiddleware(next http.Handler) http.Handler {
+	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		cookie, err := r.Cookie("session_id")
+		if err != nil {
+			http.Error(w, "session not found", http.StatusUnauthorized)
+			return
+		}
+
+		sess, err := core.GetSession(cookie.Value)
+		if err != nil {
+			http.Error(w, fmt.Sprintf("user session not found(session id: %s)", cookie.Value), http.StatusUnauthorized)
+			return
+		}
+
+		token := r.Header.Get("X-CSRF-Token")
+		if token != sess.CSRFToken {
+			http.Error(w, "invalid csrf token("+token+")", http.StatusUnauthorized)
+			return
+		}
+
+		var getUserRequest *domain.GetUserRequest
+		getUserRequest.UserId = sess.UserID
+
+		user, err := s.core.GetUser(r.Context(), getUserRequest)
+		if err != nil {
+			http.Error(w, "user not found", http.StatusUnauthorized)
+			return
+		}
+
+		ctx := core.NewContext(r.Context(), &domain.User{
+			ID:       user.User.ID,
+			Username: user.User.Username,
+			Email:    user.User.Email,
+			Role:     user.User.Role,
+		})
+
+		next.ServeHTTP(w, r.WithContext(ctx))
+	})
 }

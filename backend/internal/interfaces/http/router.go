@@ -1,6 +1,7 @@
 package http
 
 import (
+	"github.com/go-chi/chi/v5"
 	"github.com/go-chi/chi/v5/middleware"
 	"github.com/go-chi/cors"
 	_ "github.com/swaggo/files"
@@ -32,7 +33,10 @@ func (s *server) initRouter() http.Handler {
 
 	r.Get("/swagger/*", swaggerHandler)
 
-	r.Post("/api/v1/auth/sign-in", s.SignIn)
+	r.Group(func(r chi.Router) {
+		r.Use(s.authMiddleware)
+		r.Post(`/api/v1/auth/sign-in`, s.SignIn)
+	})
 	r.Post(`/api/v1/auth/sign-up`, s.SignUp)
 
 	r.Get(`/api/v1/users/{user_id}`, s.GetUser)
