@@ -8,6 +8,7 @@ import (
 	_ "polygames/cmd/docs"
 	"polygames/internal/core"
 	"polygames/internal/domain"
+	"time"
 )
 
 // SignIn godoc
@@ -31,6 +32,16 @@ func (s *server) SignIn(w http.ResponseWriter, r *http.Request) {
 		s.sendError(err, w)
 		return
 	}
+
+	http.SetCookie(w, &http.Cookie{
+		Name:     "session_id",
+		Value:    response.SessionID,
+		SameSite: http.SameSiteNoneMode,
+		Path:     "/",
+		HttpOnly: true,
+		Secure:   true,
+		Expires:  time.Now().Add(core.TTL),
+	})
 
 	s.sendJSON(http.StatusOK, response, w)
 }

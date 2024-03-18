@@ -39,8 +39,14 @@ func (c *core) SignIn(ctx context.Context, req *domain.SignInRequest) (*domain.S
 	if err != nil {
 		return nil, errcore.NewInternalError(err)
 	}
+	sessionID, csrfToken, err := NewSession(user.ID)
+	if err != nil {
+		return nil, errcore.NewInternalError(err)
+	}
 
 	return &domain.SignInResponse{
+		SessionID:    sessionID,
+		CSRFToken:    csrfToken,
 		AccessToken:  accessToken,
 		RefreshToken: refreshToken,
 	}, nil

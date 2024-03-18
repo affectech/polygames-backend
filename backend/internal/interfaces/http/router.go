@@ -37,6 +37,7 @@ func (s *server) initRouter() http.Handler {
 		r.Use(s.authMiddleware)
 		r.Post(`/api/v1/auth/sign-in`, s.SignIn)
 	})
+
 	r.Post(`/api/v1/auth/sign-up`, s.SignUp)
 
 	r.Get(`/api/v1/users/{user_id}`, s.GetUser)
