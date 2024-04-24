@@ -18,6 +18,8 @@ type (
 		Password string `json:"password"`
 	}
 	SignInResponse struct {
+		SessionID    string `json:"-"`
+		CSRFToken    string `json:"csrfToken"`
 		AccessToken  string `json:"accessToken"`
 		RefreshToken string `json:"refreshToken"`
 	}

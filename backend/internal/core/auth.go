@@ -15,6 +15,8 @@ import (
 	"golang.org/x/crypto/bcrypt"
 )
 
+const userKey = "user_id"
+
 func (c *core) SignIn(ctx context.Context, req *domain.SignInRequest) (*domain.SignInResponse, error) {
 	user, err := c.repo.GetUserByLogin(ctx, req.Login)
 	if err != nil {
@@ -37,8 +39,14 @@ func (c *core) SignIn(ctx context.Context, req *domain.SignInRequest) (*domain.S
 	if err != nil {
 		return nil, errcore.NewInternalError(err)
 	}
+	sessionID, csrfToken, err := NewSession(user.ID)
+	if err != nil {
+		return nil, errcore.NewInternalError(err)
+	}
 
 	return &domain.SignInResponse{
+		SessionID:    sessionID,
+		CSRFToken:    csrfToken,
 		AccessToken:  accessToken,
 		RefreshToken: refreshToken,
 	}, nil
@@ -154,4 +162,8 @@ func (c *core) HashPassword(password string) (string, error) {
 		return "", err
 	}
 	return string(bytes), nil
+}
+
+func NewContext(ctx context.Context, ac *domain.User) context.Context {
+	return context.WithValue(ctx, userKey, ac)
 }

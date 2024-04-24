@@ -65,6 +65,8 @@ definitions:
     properties:
       accessToken:
         type: string
+      csrfToken:
+        type: string
       refreshToken:
         type: string
     type: object
